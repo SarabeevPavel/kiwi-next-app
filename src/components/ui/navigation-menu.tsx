@@ -1,20 +1,15 @@
 'use client'
 
 import { Menu } from '@base-ui/react/menu'
-import {
-	ChevronDownIcon,
-	LogOutIcon,
-	User2,
-	UserCircle,
-	UserCircle2Icon,
-} from 'lucide-react'
+import { ChevronDownIcon, LogOutIcon, User2 } from 'lucide-react'
 import Link from 'next/link'
-
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { logout } from '@/app/auth/actions'
 import type { ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
+import Image from 'next/image'
+import logo from '@/app/favicon.png'
 
 type NavigationDeepLinkBase = {
 	label: string
@@ -87,7 +82,14 @@ function NavigationMenu({ className, userName }: NavigationMenuProps) {
 				className,
 			)}
 		>
-			<div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-4">
+			<div className="mx-auto flex h-16 w-full items-center justify-between px-3">
+				<Link
+					href={'/app/home'}
+					className="flex items-center justify-start gap-2 mr-10"
+				>
+					<Image src={logo} alt="logo-kiwi" width={40} height={40} />
+					<p className="text-2xl font-bold">KIWI</p>
+				</Link>
 				<nav aria-label="Main navigation" className="flex items-center gap-1">
 					{appNavigation.map((item) => (
 						<Link

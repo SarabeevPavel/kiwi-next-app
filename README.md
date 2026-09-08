@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# kiwi-next-app
 
-## Getting Started
+UI for KIWI Personal Assistant (Next.js App Router).
 
-First, run the development server:
+**Sibling backend:** [kiwi-backend-api](https://github.com/SarabeevPavel/kiwi-backend-api) (ASP.NET).
+This repo = frontend only. API lives in the other repo; they are one product, two packages.
+
+## Local stack
+
+| Piece | Repo | URL |
+|-------|------|-----|
+| UI | this (`kiwi-next-app`) | http://localhost:3000 |
+| API | [kiwi-backend-api](https://github.com/SarabeevPavel/kiwi-backend-api) | http://localhost:5289 |
+
+Env (`.env.local`):
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+BACKEND_API_URL=http://localhost:5289/api
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Server actions / BFF call `${BACKEND_API_URL}/...` (already includes `/api`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Run
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# terminal 1 - API
+cd kiwi-backend-api/App
+dotnet ef database update --project App.csproj
+dotnet run --launch-profile http
+# -> http://localhost:5289
 
-## Learn More
+# terminal 2 - UI
+cd kiwi-next-app
+bun install
+bun dev
+# -> http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+Without the API running, auth/notes/files will fail.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Depends on backend
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Pagination/search/sort + `{ items, total, page, pageSize }` for notes & folder children - UI still does client-side until API ships
+- Stable `createdAt` on folder/file DTOs - already used
+- Upload size: Next Server Action limit raised, ASP.NET multipart limits must match if large uploads fail
+- `rootFolderId` from `/auth/me` - missing root shows empty/missing-root UI state
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+API catalog: see backend `SWAGGER.md` / `README.md` WIP.

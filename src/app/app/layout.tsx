@@ -10,7 +10,10 @@ export default async function AppLayout({ children }: LayoutProps<'/app'>) {
 
 	return (
 		<main className="flex-1 w-full h-full">
-			<NavigationMenu userName={getUserName(user)} />
+			<NavigationMenu
+				rootFolderId={user.rootFolderId}
+				userName={getUserName(user)}
+			/>
 			{children}
 		</main>
 	)

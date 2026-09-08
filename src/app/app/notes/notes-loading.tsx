@@ -1,10 +1,10 @@
 export default function NotesLoading() {
 	return (
-		<section className="grid min-h-[640px] overflow-hidden rounded-lg border border-border bg-background shadow-sm lg:grid-cols-[320px_1fr]">
+		<section className="grid min-h-[calc(100vh-130px)]overflow-hidden rounded-lg border border-border bg-background shadow-sm lg:grid-cols-[320px_1fr]">
 			<aside className="flex min-h-0 flex-col border-b border-border bg-card lg:border-r lg:border-b-0">
 				<div className="flex h-14 items-center justify-between border-b border-border px-4">
 					<div className="h-3 w-20 animate-pulse rounded bg-muted" />
-					<div className="size-7 animate-pulse rounded-lg bg-muted" />
+					<div className="w-24 h-7 animate-pulse rounded-lg bg-muted" />
 				</div>
 
 				<div className="mx-4 mt-4 h-9 animate-pulse rounded-lg bg-muted" />

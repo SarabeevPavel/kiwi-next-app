@@ -27,7 +27,7 @@ type NavigationItem = {
 	icon?: ReactNode
 	href: string
 	label: string
-	value: 'home' | 'notes' | 'auth'
+	value: 'home' | 'notes' | 'files' | 'auth'
 	deepLinks: NavigationDeepLink[]
 	hidden?: boolean
 }
@@ -37,6 +37,12 @@ const navigation: NavigationItem[] = [
 		href: '/app/home',
 		label: 'Home',
 		value: 'home',
+		deepLinks: [],
+	},
+	{
+		href: '/app/files',
+		label: 'Files',
+		value: 'files',
 		deepLinks: [],
 	},
 	{
@@ -63,12 +69,28 @@ const navigation: NavigationItem[] = [
 
 type NavigationMenuProps = {
 	className?: string
+	rootFolderId?: string | null
 	userName?: string
 }
 
-function NavigationMenu({ className, userName }: NavigationMenuProps) {
+function NavigationMenu({
+	className,
+	rootFolderId,
+	userName,
+}: NavigationMenuProps) {
 	const pathname = usePathname()
-	const appNavigation = navigation.filter((item) => !item.hidden)
+	const appNavigation = navigation
+		.filter((item) => !item.hidden)
+		.map((item) => {
+			if (item.value !== 'files' || !rootFolderId) {
+				return item
+			}
+
+			return {
+				...item,
+				href: `/app/files/${rootFolderId}`,
+			}
+		})
 	const authNavigation = navigation.find((item) => item.value === 'auth')
 	const menuItemClassName = cn(
 		'flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm outline-none transition-colors',
@@ -91,21 +113,26 @@ function NavigationMenu({ className, userName }: NavigationMenuProps) {
 					<p className="text-2xl font-bold">KIWI</p>
 				</Link>
 				<nav aria-label="Main navigation" className="flex items-center gap-1">
-					{appNavigation.map((item) => (
-						<Link
-							key={item.value}
-							href={item.href}
-							className={cn(
-								buttonVariants({ variant: 'ghost', size: 'lg' }),
-								pathname === item.href
-									? 'text-white bg-blue-600'
-									: 'text-gray-600',
-								'hover:text-white hover:bg-blue-600 active:text-white active:bg-blue-600',
-							)}
-						>
-							{item.label}
-						</Link>
-					))}
+					{appNavigation.map((item) => {
+						const isActive =
+							pathname === item.href ||
+							pathname.startsWith(`${item.href}/`) ||
+							(item.value === 'files' && pathname.startsWith('/app/files'))
+
+						return (
+							<Link
+								key={item.value}
+								href={item.href}
+								className={cn(
+									buttonVariants({ variant: 'ghost', size: 'lg' }),
+									isActive ? 'text-white bg-blue-600' : 'text-gray-600',
+									'hover:text-white hover:bg-blue-600 active:text-white active:bg-blue-600',
+								)}
+							>
+								{item.label}
+							</Link>
+						)
+					})}
 				</nav>
 
 				<Menu.Root>

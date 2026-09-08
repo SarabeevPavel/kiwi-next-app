@@ -9,6 +9,8 @@ type User = {
 	name?: string
 	username?: string
 	email?: string
+	role?: 'User' | 'Admin' | 'Owner'
+	rootFolderId?: string | null
 }
 
 type AuthResponse = {
